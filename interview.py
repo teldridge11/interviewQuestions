@@ -650,6 +650,26 @@ def binarySearch(array,val):
             first = mid+1
     return found
 
+# Binary Search (recursive) - O(log n)
+def binarySearch(array,num):
+    if len(array) == 0:
+        return False
+    else:
+        mid = len(array)//2
+        if array[mid] == num:
+            return True
+        elif num > array[mid]:
+            return binarySearch(array[mid+1:],num)
+        else:
+            return binarySearch(array[:mid],num)
+            
+def reverse(string):
+    s = []
+    s.extend(string)
+    size = len(s)
+    for i in range(0,size//2):
+        s[i], s[size-1-i] = s[size-1-i], s[i]
+    return ''.join(s)
 
 def reverse(string):
     s = []
@@ -658,3 +678,107 @@ def reverse(string):
     for i in range(0,size//2):
         s[i], s[size-1-i] = s[size-1-i], s[i]
     return ''.join(s)
+
+# Euclid's Algorithm (Finds the greatest common divisor of two numbers)
+def euclid(a,b):
+    while b:
+        a, b = b, a%b
+    return a
+
+class NodeBT:
+    def __init__(self, val):
+        self.l = None
+        self.r = None
+        self.v = val
+
+class Tree:
+    def __init__(self):
+        self.root = None
+
+    def getRoot(self):
+        return self.root
+
+    def add(self, val):
+        if self.root is None:
+            self.root = NodeBT(val)
+        else:
+            self._add(val, self.root)
+
+    def _add(self, val, node):
+        if val < node.v:
+            if node.l is not None:
+                self._add(val, node.l)
+            else:
+                node.l = NodeBT(val)
+        else:
+            if node.r is not None:
+                self._add(val, node.r)
+            else:
+                node.r = NodeBT(val)
+
+    def find(self, val):
+        if self.root is not None:
+            return self._find(val, self.root)
+        else:
+            return None
+
+    def _find(self, val, node):
+        if val is node.v:
+            return node
+        elif val < node.v and node.l is not None:
+            self._find(val, node.l)
+        elif val > node.v and node.r is not None:
+            self._find(val, node.r)
+
+    def printTree(self):
+        if self.root is not None:
+            self._printTree(self.root)
+
+    def _printTree(self, node):
+        if node is not None:
+            self._printTree(node.l)
+            print(str(node.v) + ' ')
+            self._printTree(node.r)
+
+    def dfs(self, tree):
+        if tree.root is None:
+            return []
+        visited, stack = [], [tree.root]
+        while stack:
+            node = stack.pop()
+            visited.append(node)
+            #stack.extend(filter(None, [node.r, node.l])) #
+            if node.r is not None:
+                stack.append(node.r)
+            if node.l is not None:
+                stack.append(node.l)
+            # append right first, so left will be popped first
+            print(node.v)
+        return visited
+
+
+    def bfs(self, tree):
+        if tree.root is None:
+            return []
+        visited, queue = [], [tree.root]
+        while queue:
+            node = queue.pop()
+            visited.insert(0, node)
+            if node.l is not None:
+                queue.insert(0,node.l)
+            if node.r is not None:
+                queue.insert(0,node.r)
+            # append left first, so right will be popped first
+            print(node.v)
+        return visited
+    
+#     3
+# 0     4
+#   2      8
+tree = Tree()
+tree.add(3)
+tree.add(4)
+tree.add(0)
+tree.add(8)
+tree.add(2)
+tree.bfs(tree)
